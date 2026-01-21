@@ -1,8 +1,8 @@
 package com.practicas.hexagonal.infrastructure.exception;
 
-import com.practicas.hexagonal.domain.exception.CategoryNotFoundException;
-import com.practicas.hexagonal.domain.exception.DuplicateCategoryException;
-import com.practicas.hexagonal.domain.exception.InvalidCategoryException;
+import com.practicas.hexagonal.domain.exception.EntityNotFoundException;
+import com.practicas.hexagonal.domain.exception.DuplicateEntityException;
+import com.practicas.hexagonal.domain.exception.InvalidEntityException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -13,26 +13,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Manejador global de excepciones
- * Captura las excepciones lanzadas desde cualquier capa y las convierte en respuestas HTTP
- * 
- * UBICACIÓN: Infrastructure (porque usa anotaciones de Spring Web)
- * 
- * Captura:
- * - Excepciones de dominio (CategoryNotFoundException, etc.)
- * - Excepciones de validación (@Valid)
- * - Excepciones genéricas
- */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    
     /**
-     * Maneja excepciones cuando no se encuentra una categoría
+     * Maneja excepciones cuando no se encuentra una entidad
      * Retorna HTTP 404 Not Found
      */
-    @ExceptionHandler(CategoryNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleCategoryNotFound(CategoryNotFoundException ex) {
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleEntityNotFound(EntityNotFoundException ex) {
         ErrorResponse error = new ErrorResponse(
                 ex.getMessage(),
                 HttpStatus.NOT_FOUND.value()
@@ -41,11 +29,11 @@ public class GlobalExceptionHandler {
     }
     
     /**
-     * Maneja excepciones cuando se intenta crear una categoría duplicada
+     * Maneja excepciones cuando se intenta crear una entidad duplicada
      * Retorna HTTP 409 Conflict
      */
-    @ExceptionHandler(DuplicateCategoryException.class)
-    public ResponseEntity<ErrorResponse> handleDuplicateCategory(DuplicateCategoryException ex) {
+    @ExceptionHandler(DuplicateEntityException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateEntity(DuplicateEntityException ex) {
         ErrorResponse error = new ErrorResponse(
                 ex.getMessage(),
                 HttpStatus.CONFLICT.value()
@@ -57,8 +45,8 @@ public class GlobalExceptionHandler {
      * Maneja excepciones de validación de dominio
      * Retorna HTTP 400 Bad Request
      */
-    @ExceptionHandler(InvalidCategoryException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidCategory(InvalidCategoryException ex) {
+    @ExceptionHandler(InvalidEntityException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidEntity(InvalidEntityException ex) {
         ErrorResponse error = new ErrorResponse(
                 ex.getMessage(),
                 HttpStatus.BAD_REQUEST.value()

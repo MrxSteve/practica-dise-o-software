@@ -1,7 +1,7 @@
 package com.practicas.hexagonal.application.usecases;
 
-import com.practicas.hexagonal.domain.exception.CategoryNotFoundException;
-import com.practicas.hexagonal.domain.exception.DuplicateCategoryException;
+import com.practicas.hexagonal.domain.exception.DuplicateEntityException;
+import com.practicas.hexagonal.domain.exception.EntityNotFoundException;
 import com.practicas.hexagonal.domain.model.Category;
 import com.practicas.hexagonal.domain.ports.in.UpdateCategoryInputPort;
 import com.practicas.hexagonal.domain.ports.out.CategoryRepositoryPort;
@@ -16,12 +16,12 @@ public class UpdateCategoryUseCase implements UpdateCategoryInputPort {
     @Override
     public Category update(Long id, Category category) {
         Category existingCategory = categoryRepository.findById(id)
-                .orElseThrow(() -> new CategoryNotFoundException(id));
+                .orElseThrow(() -> new EntityNotFoundException("Category", id));
 
         category.validate();
 
         if (categoryRepository.existsByNameAndIdNot(category.getName(), id)) {
-            throw new DuplicateCategoryException(category.getName());
+            throw new DuplicateEntityException("Category", "name", category.getName());
         }
         
         existingCategory.setName(category.getName());

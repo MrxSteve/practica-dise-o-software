@@ -1,6 +1,6 @@
 package com.practicas.hexagonal.application.usecases;
 
-import com.practicas.hexagonal.domain.exception.CategoryNotFoundException;
+import com.practicas.hexagonal.domain.exception.EntityNotFoundException;
 import com.practicas.hexagonal.domain.model.Category;
 import com.practicas.hexagonal.domain.ports.in.GetCategoryInputPort;
 import com.practicas.hexagonal.domain.ports.out.CategoryRepositoryPort;
@@ -17,7 +17,7 @@ public class GetCategoryUseCase implements GetCategoryInputPort {
     @Override
     public Category getById(Long id) {
         return categoryRepository.findById(id)
-                .orElseThrow(() -> new CategoryNotFoundException(id));
+                .orElseThrow(() -> new EntityNotFoundException("Category", id));
     }
     
     @Override
