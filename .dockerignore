@@ -1,0 +1,31 @@
+# Archivos y directorios a ignorar en el build de Docker
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+*.code-workspace
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Git
+.git/
+.gitignore
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# Archivos temporales
+*.tmp
+*.bak
+*.swp
+*~
