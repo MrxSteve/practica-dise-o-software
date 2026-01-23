@@ -2,6 +2,7 @@ package com.practicas.hexagonal.application.usecases;
 
 import com.practicas.hexagonal.domain.exception.DuplicateEntityException;
 import com.practicas.hexagonal.domain.exception.EntityNotFoundException;
+import com.practicas.hexagonal.domain.exception.InvalidEntityException;
 import com.practicas.hexagonal.domain.model.Product;
 import com.practicas.hexagonal.domain.ports.in.UpdateProductInputPort;
 import com.practicas.hexagonal.domain.ports.out.BrandRepositoryPort;
@@ -43,5 +44,34 @@ public class UpdateProductUseCase implements UpdateProductInputPort {
         product.setId(id);
 
         return productRepository.save(product);
+    }
+
+    @Override
+    public void addStock(Long id, int quantity) {
+        Product existingProduct = productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Product", id));
+        existingProduct.setStock(existingProduct.getStock() + quantity);
+
+        productRepository.save(existingProduct);
+    }
+
+    @Override
+    public void removeStock(Long id, int quantity) {
+        if (quantity <= 0) {
+            throw new InvalidEntityException("Quantity to remove must be greater than 0");
+        }
+
+        Product existingProduct = productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Product", id));
+
+        if (existingProduct.getStock() < quantity) {
+            throw new InvalidEntityException(
+                    String.format("Insufficient stock. Available: %d, Requested: %d",
+                            existingProduct.getStock(), quantity)
+            );
+        }
+
+        existingProduct.setStock(existingProduct.getStock() - quantity);
+        productRepository.save(existingProduct);
     }
 }
